@@ -53,19 +53,18 @@ function App() {
   const [timer, setTimer] = useState(true);
 
   const handleAnswer = (variant, trueVariant, index) => {
-    const isCorrect = variant === trueVariant;
+    // функція кліку на варіант відповіді
+    const isCorrect = variant === trueVariant; // перевірка на правильність відповіді
     if (isCorrect) {
-      setTrueAnswer((prev) => prev + 1);
-    } else {
-      setFalseAnswer((prev) => prev + 1);
+      setTrueAnswer((prev) => prev + 1); 
     }
 
     let updatedItems = [...items];
     updatedItems[index] = { ...updatedItems[index], presable: false };
     setItems(updatedItems);
-    console.log("true", " :", trueAnswer, " ", "false", " :", falseAnswer);
     setTotalQuestions(totalQuestions - 1);
 
+    // це визивається коли тест буде закінчено
     if (totalQuestions === 1) {
       setResultModal(true);
       getRandomObjects();
@@ -74,13 +73,10 @@ function App() {
     }
   };
 
-  let time = new Date();
-  time.setSeconds(time.getSeconds() + 2000);
-
   const getRandomObjects = () => {
+    // отримуємо рандомних 20 запитань
     const randomObjects = [];
     const dataCopy = [...questions];
-    console.log(randomObjects);
 
     while (randomObjects.length < 20 && dataCopy.length > 0) {
       const randomIndex = Math.floor(Math.random() * dataCopy.length);
@@ -92,6 +88,7 @@ function App() {
   };
 
   useEffect(() => {
+    // визиваємо футкцію щоб отримати питання (useEffect для того щоб ця фунція не визивалась при ререндері компонента)
     getRandomObjects();
   }, []);
 
@@ -100,6 +97,7 @@ function App() {
       <div className="container">
         <h1 className="title">Іспит з ПДР України 2023</h1>
         <div className="test__items">
+          {/* Виведення питань */}
           {items.map((item, index) => {
             return (
               <div className="test__item" key={index}>
@@ -114,6 +112,7 @@ function App() {
                   />
                 )}
                 <form className="test__variants">
+                  {/* Виведення варіантів відповіді */}
                   {item.variants.map((variant, variantIndex) => {
                     return (
                       <label
@@ -150,17 +149,16 @@ function App() {
           <h3 className="bottom-bar__precess bottom-bar__text">
             Залишилось <span>{totalQuestions}</span> питань
           </h3>
-          {timer && (
+            {/* Таймер */}
             <Timer
-              expiryTimestamp={time}
+            // дія після закінчення таймеру
               func={() => {
-                setResultModal(true);
-                getRandomObjects();
-                setInputs(false);
+                setResultModal(true); // відкриття модального вікна
+                getRandomObjects(); // генерація нових питань
+                setInputs(false); // зброс чекбоксів
               }}
               restartTimer={resultModal}
             />
-          )}
         </div>
       </div>
       {resultModal && (
@@ -169,7 +167,7 @@ function App() {
             <button
               className="close__modal"
               onClick={() => {
-                setResultModal(false);
+                setResultModal(false); 
                 setTimer(false);
                 setTimer(true);
                 setFalseAnswer(0);
